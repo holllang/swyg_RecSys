@@ -7,22 +7,9 @@
 
 - torch==1.4.0
 - transformers==2.10.0
+- sentencepiece==0.1.97
 
-## How to use KoBERT on Huggingface Transformers Library
-
-- 기존의 KoBERT를 transformers 라이브러리에서 곧바로 사용할 수 있도록 맞췄습니다.
-  - transformers v2.2.2부터 개인이 만든 모델을 transformers를 통해 직접 업로드/다운로드하여 사용할 수 있습니다
-- Tokenizer를 사용하려면 `tokenization_kobert.py`에서 `KoBertTokenizer`를 임포트해야 합니다.
-
-```python
-from transformers import BertModel
-from tokenization_kobert import KoBertTokenizer
-
-model = BertModel.from_pretrained('monologg/kobert')
-tokenizer = KoBertTokenizer.from_pretrained('monologg/kobert')
-```
-
-## Usage
+## Train
 
 ```bash
 $ python3 main.py --model_type kobert --do_train --do_eval
@@ -30,9 +17,17 @@ $ python3 main.py --model_type kobert --do_train --do_eval
 
 ## Prediction
 
+ - [여기](https://drive.google.com/drive/folders/1-83lNwn58RE9bVOKKJ_h0uMzvrx587AU?usp=sharing)서 pre-trained 파일들을 다운 받아 ```./model``` 디렉토리에 넣어줍니다.
+
+
 ```bash
 $ python3 predict.py --input_file {INPUT_FILE_PATH} --output_file {OUTPUT_FILE_PATH} --model_dir {SAVED_CKPT_PATH}
 ```
+default ```INPUT_FILE_PATH``` : ```./sample_pred_in.txt```
+
+default ```OUTPUT_FILE_PATH``` : ```./sample_pred_out.txt```
+
+default ```SAVED_CKPT_PATH``` : ```./model```
 
 ## Results
 
@@ -48,3 +43,6 @@ $ python3 predict.py --input_file {INPUT_FILE_PATH} --output_file {OUTPUT_FILE_P
 - [KoBERT](https://github.com/SKTBrain/KoBERT)
 - [Huggingface Transformers](https://github.com/huggingface/transformers)
 - [NSMC dataset](https://github.com/e9t/nsmc)
+
+## Acknowledgments
+* [원작자](https://github.com/monologg)분께 코드 공유와 관련하여 감사의 말씀 전합니다 :)
