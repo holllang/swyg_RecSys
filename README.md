@@ -1,6 +1,6 @@
 # swyg_RecSys
 
-* [Colab](https://github.com/swyg-goorm/swyg_RecSys/blob/main/SWYG_RecSys.ipynb) 보러가기
+* [주피터 노트북](https://github.com/swyg-goorm/swyg_RecSys/blob/main/SWYG_RecSys.ipynb) 보러가기
 
 > 유저의 답변을 기반으로 유저에게 맞는 취미를 추천해주는 다중 분류 기반 추천 시스템
 
