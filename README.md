@@ -20,19 +20,19 @@
 
 ### example
 
-```
+```Python
 num_per_question = [2,3,4,3,2,3,3,2,3,2,3,2,2,2,2,2]
 ```
 
 ```i+1``` 번째 문항의 답변 개수는 총 ```num_per_question[i]``` 개이다.
 
-```
+```Python
 answer = [1,2,4,1,2,3,3,2,1,2,3,1,1,2,3,2]
 ```
 
 유저는 ```i+1``` 번째 문항에  ```answer[i]``` 번째 답변을 골랐다.
 
-```
+```Python
 question_bias = []
 for idx, num in enumerate(num_per_question):
   if idx==0: question_bias.append(0)
@@ -48,7 +48,7 @@ answer와 question_bias를 같은 인덱스끼리 더하고 1을 빼면(0~39 인
 
 ```answer_with_bias = [0,3,8,9,13,16,19,21,22,26,29,30,32,35,38,39]```
 
-```
+```Python
 def vectorize_sequences(sequences, dimension=40):
     results = np.zeros((len(sequences), dimension))
     for i, sequence in enumerate(sequences):
@@ -66,7 +66,7 @@ def vectorize_sequences(sequences, dimension=40):
 
 ## 학습
 
-```
+```Python
 model = models.Sequential()
 model.add(layers.Dense(32, activation='relu', input_shape=(40,)))
 model.add(layers.Dense(16, activation='relu'))
@@ -77,8 +77,8 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 ```
 
-모델은 두 개의 은닉층을 가진 딥러닝 모델을 사용하였고, 병목을 예방하기 위해 서서히 차원을 줄여 나가서 분류 클래스만큼 표현하도록 하였다.
-optimizer는 국룰 adam을 사용하였다.
+모델은 두 개의 은닉층을 가진 딥러닝 모델을 사용하였고, 병목을 예방하기 위해 서서히 차원을 줄여 나가서 분류 클래스만큼 표현하도록 하였다.</br>
+optimizer는 국룰 ```adam```을 사용하였다.
 
 > epoch:20, batch_size=512
 
