@@ -66,6 +66,11 @@ def vectorize_sequences(sequences, dimension=40):
 
 ## 학습
 
+```Bash
+python3 train.py --data_path {DATA_PATH} --epoch {EPOCH} --batch_size {BATCH_SIZE}
+```
+
+
 ```Python
 model = models.Sequential()
 model.add(layers.Dense(32, activation='relu', input_shape=(40,)))
@@ -94,12 +99,36 @@ optimizer는 국룰 ```adam```을 사용하였다.
 
 훈련 데이터 값을 조금씩만 바꾸고 예측을 해봤는데, 원하던 결과는 맨 첫 컬럼이 1,2,3,4,5로 나오는 것이었지만 5,2,3,4,5 로 나온 것을 보니 정확도가 나쁘지 않은 정도임을 알 수 있었다.
 
+### Usage
+
+```Python
+from infer import InferModule
+from keras import models
+
+model = models.load_model('./model_saved')
+num_per_question = [2,3,4,3,2,3,3,2,3,2,3,2,2,2,2,2]
+num2hobby = {0: '취미1', 1: '취미2', 2: '취미3', 3: '취미4', 4: '취미5'}
+
+IM = InferModule(model, num_per_question, num2hobby)
+
+if __name__=='__main__':
+
+    result = IM.start_inferring([1,2,4,1,2,3,2,2,1,2,3,1,1,2,3,2])
+    print(result)
+```
+
+추론 클래스(```InferModule```)를 필요한 파라미터들로 초기화 시키고,</br>
+추론이 필요할 땐 ```IM.start_inferring``` 으로 불러서 실행하면 된다.</br>
+
+매 추론 요청마다 모델을 로드하는 것이 아닌,</br>
+모델을 로드해두고 추론을 하는 것이기 때문에 실행 시간이 짧다 :)
+
 ## 진행 상황
 
 ### _1/21 데이터셋 구축 시에 사용할 KoBERT 감성 분석 모델 학습 완료_
 
 ## 추후 추가 내용
-- .py 파일로 바꿔서 업로드
+- ~~.py 파일로 바꿔서 업로드~~ 1/22
 - 키워드 크롤링 파이프라인 구축
 - 데이터셋 구축 및 유효성 확보/검증
 
