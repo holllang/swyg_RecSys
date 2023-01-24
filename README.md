@@ -105,22 +105,19 @@ optimizer는 국룰 ```adam```을 사용하였다.
 from infer import InferModule
 from keras import models
 
-# 추론 모듈 세팅을 위해 필수적으로 필요한 파라미터들
 model = models.load_model('./model_saved')
-num_per_question = [2,3,4,3,2,3,3,2,3,2,3,2,2,2,2,2]
-num2hobby = {0: '취미1', 1: '취미2', 2: '취미3', 3: '취미4', 4: '취미5'}
-
-IM = InferModule(model, num_per_question, num2hobby)
+IM = InferModule(model)
 
 if __name__=='__main__':
-    
+
     # 사용자의 문항별 답변 항목을 추론 input으로
     result = IM.start_inferring([1,2,4,1,2,3,2,2,1,2,3,1,1,2,3,2])
+    print(result)
     
     # result : ['취미2', '취미4', '취미1']
 ```
 
-추론 클래스(```InferModule```)를 필요한 파라미터들로 초기화 시키고,</br>
+추론 모듈을 먼저 로드해두고,</br>
 추론이 필요할 땐 ```IM.start_inferring``` 으로 불러서 실행하면 된다.</br>
 
 매 추론 요청마다 모델을 로드하는 것이 아닌,</br>
@@ -129,7 +126,8 @@ if __name__=='__main__':
 ## 진행 상황
 
 ### 1/21 데이터셋 구축 시에 사용할 KoBERT 감성 분석 모델 학습 완료
-### _1/22 .py 리팩토링 및 모듈화 완료_
+### 1/22 .py 리팩토링 및 모듈화 완료
+### _1/24 base_info.json을 이용한 추가 모듈화 작업 완료_
 
 ## 추후 추가 내용
 - ~~.py 파일로 바꿔서 업로드~~ 1/22
