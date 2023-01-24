@@ -105,6 +105,7 @@ optimizer는 국룰 ```adam```을 사용하였다.
 from infer import InferModule
 from keras import models
 
+# 추론 모듈 세팅을 위해 필수적으로 필요한 파라미터들
 model = models.load_model('./model_saved')
 num_per_question = [2,3,4,3,2,3,3,2,3,2,3,2,2,2,2,2]
 num2hobby = {0: '취미1', 1: '취미2', 2: '취미3', 3: '취미4', 4: '취미5'}
@@ -112,9 +113,12 @@ num2hobby = {0: '취미1', 1: '취미2', 2: '취미3', 3: '취미4', 4: '취미5
 IM = InferModule(model, num_per_question, num2hobby)
 
 if __name__=='__main__':
-
+    
+    # 사용자의 문항별 답변 항목을 추론 input으로
     result = IM.start_inferring([1,2,4,1,2,3,2,2,1,2,3,1,1,2,3,2])
     print(result)
+    
+    # result : ['취미2', '취미4', '취미1']
 ```
 
 추론 클래스(```InferModule```)를 필요한 파라미터들로 초기화 시키고,</br>
