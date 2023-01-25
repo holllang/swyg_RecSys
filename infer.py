@@ -12,7 +12,7 @@ class InferModule:
     def __init__(self, model):
         self.model = model
         self.question_bias = []
-        with open('./model_saved/base_info.json') as f:
+        with open('./model_saved/base_info.json', encoding='utf8') as f:
             base_info = json.load(f)
             self.num_per_question = base_info["list"]
             self.num2hobby = base_info["hobby_enum"]
