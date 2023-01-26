@@ -1,5 +1,8 @@
 from infer import InferModule
 from keras import models
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 model = models.load_model('./model_saved')
 IM = InferModule(model)
