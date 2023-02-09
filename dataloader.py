@@ -6,39 +6,39 @@ class DataLoader:
             self.datadict_from_json =  json.load(f)
         
         self.num2hobby = {}
-        self.answers = []
+        self.scores = []
         for idx, key in enumerate(self.datadict_from_json):
             self.num2hobby[idx] = key
-            self.answers.append(self.datadict_from_json[key])
+            self.scores.append(self.datadict_from_json[key])
         
-        self.num_per_question = []
-        self.question_bias = []
+        self.position_score = []
+        self.score_bias = []
 
-    def setBias(self, num_per_question):
-        self.num_per_question = num_per_question
+    def setBias(self, position_score):
+        self.position_score = position_score
         
-        for idx in range(len(num_per_question)):
+        for idx in range(len(position_score)):
             if idx == 0: 
-                self.question_bias.append(0)
+                self.score_bias.append(0)
             else:
-                self.question_bias.append(sum(num_per_question[:idx]))
+                self.score_bias.append(sum(position_score[:idx]))
     
     def getDatasetWithBias(self):
-        answers_with_bias = []
-        for answer in self.answers:
-            answer_to_data = [(a+b-1) for a, b in zip(answer, self.question_bias)]
-            answers_with_bias.append(answer_to_data)
+        scores_with_bias = []
+        for score in self.scores:
+            score_to_data = [(a+b-1) for a, b in zip(score, self.score_bias)]
+            scores_with_bias.append(score_to_data)
 
-        return answers_with_bias
+        return scores_with_bias
 
-    def getDataWithBias(self, answer):
-        return [(a+b-1) for a, b in zip(answer, self.question_bias)]
+    def getDataWithBias(self, score):
+        return [(a+b-1) for a, b in zip(score, self.score_bias)]
 
     def getNum2Hobby(self):
         return self.num2hobby
 
     def getLen(self):
-        return len(self.answers[0])
+        return len(self.scores[0])
 
     def getCount(self):
-        return len(self.answers)
+        return len(self.scores)
