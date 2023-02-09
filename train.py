@@ -6,7 +6,7 @@ from dataloader import DataLoader
 import argparse
 
 
-def vectorize_sequences(sequences, dimension=40):
+def vectorize_sequences(sequences, dimension=404):
     results = np.zeros((len(sequences), dimension))
     for i, sequence in enumerate(sequences):
         sequence = list(sequence)
@@ -28,13 +28,14 @@ if __name__=='__main__':
     shape_X = sum(position_score)
     dl.setBias(position_score)
     
-    X_labels = np.array([i for i in range(dl.getLen())])
+    X_labels = np.array([i for i in range(dl.getCount())])
     num2hobby = dl.getNum2Hobby()
     scores_with_bias = dl.getDatasetWithBias()
 
     X_train = vectorize_sequences(scores_with_bias)
     one_hot_train_labels = to_categorical(X_labels)
-
+    print(X_train)
+    print(X_labels)
     # 새 모델로 시작
     model = models.Sequential()
     model.add(layers.Dense(32, activation='relu', input_shape=(shape_X,)))
