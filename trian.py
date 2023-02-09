@@ -24,15 +24,15 @@ if __name__=='__main__':
 
     # 데이터 전처리
     dl = DataLoader(args.data_path)
-    num_per_question = [101,101,101,101]
-    shape_X = sum(num_per_question)
-    dl.setBias(num_per_question)
+    position_score = [101,101,101,101]
+    shape_X = sum(position_score)
+    dl.setBias(position_score)
     
     X_labels = np.array([i for i in range(dl.getLen())])
     num2hobby = dl.getNum2Hobby()
-    answers_with_bias = dl.getDatasetWithBias()
+    scores_with_bias = dl.getDatasetWithBias()
 
-    X_train = vectorize_sequences(answers_with_bias)
+    X_train = vectorize_sequences(scores_with_bias)
     one_hot_train_labels = to_categorical(X_labels)
 
     # 새 모델로 시작
