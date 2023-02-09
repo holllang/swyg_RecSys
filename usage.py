@@ -10,5 +10,5 @@ IM = InferModule(model)
 if __name__=='__main__':
 
     # 사용자의 문항별 답변 항목을 추론 input으로
-    result = IM.start_inferring([57, 10, 98, 55])
+    result = IM.start_inferring([45, 67, 99, 55])
     print(result)

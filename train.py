@@ -38,8 +38,8 @@ if __name__=='__main__':
     print(X_labels)
     # 새 모델로 시작
     model = models.Sequential()
-    model.add(layers.Dense(32, activation='relu', input_shape=(shape_X,)))
-    model.add(layers.Dense(16, activation='relu'))
+    model.add(layers.Dense(36, activation='relu', input_shape=(shape_X,)))
+    model.add(layers.Dense(24, activation='relu'))
     model.add(layers.Dense(dl.getCount(), activation='softmax'))
 
     model.compile(optimizer='adam',
