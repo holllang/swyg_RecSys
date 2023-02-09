@@ -24,7 +24,7 @@ if __name__=='__main__':
 
     # 데이터 전처리
     dl = DataLoader(args.data_path)
-    num_per_question = [2,3,4,3,2,3,3,2,3,2,3,2,2,2,2,2]
+    num_per_question = [101,101,101,101]
     shape_X = sum(num_per_question)
     dl.setBias(num_per_question)
     
