@@ -6,7 +6,7 @@ from dataloader import DataLoader
 import argparse
 
 
-def vectorize_sequences(sequences, dimension=404):
+def vectorize_sequences(sequences, dimension):
     results = np.zeros((len(sequences), dimension))
     for i, sequence in enumerate(sequences):
         sequence = list(sequence)
@@ -32,7 +32,7 @@ if __name__=='__main__':
     num2hobby = dl.getNum2Hobby()
     scores_with_bias = dl.getDatasetWithBias()
 
-    X_train = vectorize_sequences(scores_with_bias)
+    X_train = vectorize_sequences(scores_with_bias, sum(position_score))
     one_hot_train_labels = to_categorical(X_labels)
     print(X_train)
     print(X_labels)

@@ -1,7 +1,7 @@
 import numpy as np
 import json
 
-def vectorize_sequences(sequences, dimension=40):
+def vectorize_sequences(sequences, dimension):
     results = np.zeros((len(sequences), dimension))
     for i, sequence in enumerate(sequences):
         sequence = list(sequence)
@@ -11,21 +11,21 @@ def vectorize_sequences(sequences, dimension=40):
 class InferModule:
     def __init__(self, model):
         self.model = model
-        self.question_bias = []
+        self.score_bias = []
         with open('./model_saved/base_info.json', encoding='utf8') as f:
             base_info = json.load(f)
-            self.num_per_question = base_info["list"]
+            self.position_score = base_info["list"]
             self.num2hobby = base_info["hobby_enum"]
 
-        for idx in range(len(self.num_per_question)):
+        for idx in range(len(self.position_score)):
             if idx == 0: 
-                self.question_bias.append(0)
+                self.score_bias.append(0)
             else:
-                self.question_bias.append(sum(self.num_per_question[:idx]))
+                self.score_bias.append(sum(self.position_score[:idx]))
 
-    def start_inferring(self, infer_answer):
-        X_infer = [(a+b-1) for a, b in zip(infer_answer, self.question_bias)]
-        X_infer = vectorize_sequences([X_infer])
+    def start_inferring(self, infer_score):
+        X_infer = [(a+b-1) for a, b in zip(infer_score, self.score_bias)]
+        X_infer = vectorize_sequences([X_infer], sum(self.position_score))
         predictions = self.model.predict(X_infer)
         
         for pred in predictions:
