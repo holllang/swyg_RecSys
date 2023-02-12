@@ -18,8 +18,8 @@ def vectorize_sequences(sequences, dimension):
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, default='data/example.json')
-    parser.add_argument('--epoch', type=int, default=100)
-    parser.add_argument('--batch_size', type=int, default=512)
+    parser.add_argument('--epoch', type=int, default=25)
+    parser.add_argument('--batch_size', type=int, default=5)
 
     args = parser.parse_args()
 
@@ -36,12 +36,12 @@ if __name__=='__main__':
 
     X_train = vectorize_sequences(scores_with_bias, sum(position_score))
     one_hot_train_labels = to_categorical(X_labels)
-    print(X_train)
-    print(X_labels)
+    
     # 새 모델로 시작
     model = models.Sequential()
-    model.add(layers.Dense(36, activation='relu', input_shape=(shape_X,)))
-    model.add(layers.Dense(24, activation='relu'))
+    model.add(layers.Dense(80, activation='relu', input_shape=(shape_X,)))
+    model.add(layers.Dense(60, activation='relu'))
+    model.add(layers.Dense(40, activation='relu'))
     model.add(layers.Dense(dl.getCount(), activation='softmax'))
 
     model.compile(optimizer='adam',
