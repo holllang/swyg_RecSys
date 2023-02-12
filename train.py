@@ -25,7 +25,8 @@ if __name__=='__main__':
 
     # 데이터 전처리
     dl = DataLoader(args.data_path)
-    position_score = [101,101,101,101]
+    # position_score = [101,101,101,101]
+    position_score = [20,20,20,20]
     shape_X = sum(position_score)
     dl.setBias(position_score)
     
