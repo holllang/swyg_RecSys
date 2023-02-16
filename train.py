@@ -39,9 +39,8 @@ if __name__=='__main__':
     
     # 새 모델로 시작
     model = models.Sequential()
-    model.add(layers.Dense(80, activation='relu', input_shape=(shape_X,)))
-    model.add(layers.Dense(60, activation='relu'))
-    model.add(layers.Dense(40, activation='relu'))
+    model.add(layers.Dense(40, activation='relu', input_shape=(shape_X,)))
+    model.add(layers.Dense(20, activation='relu'))
     model.add(layers.Dense(dl.getCount(), activation='softmax'))
 
     model.compile(optimizer='adam',
