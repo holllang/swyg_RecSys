@@ -10,7 +10,7 @@ IM = InferModule(model)
 if __name__=='__main__':
 
     # 사용자의 문항별 답변 항목을 추론 input으로
-    result = IM.start_inferring([1, 1, 1, 3])
+    result = IM.start_inferring([2, 1, 0, 1])
     print(result)
 
 
