@@ -24,11 +24,11 @@ class InferModule:
                 self.score_bias.append(sum(self.position_score[:idx]))
 
     def start_inferring(self, infer_score):
-        score_add = []
-        for s in infer_score:
-            if s < 10: score_add.append(0)
-            else: score_add.append(1)
-        infer_score = score_add + infer_score
+        # score_add = []
+        # for s in infer_score:
+        #     if s < 10: score_add.append(0)
+        #     else: score_add.append(1)
+        # infer_score = score_add + infer_score
         X_infer = [(a+b-1) for a, b in zip(infer_score, self.score_bias)]
         X_infer = vectorize_sequences([X_infer], sum(self.position_score))
         predictions = self.model.predict(X_infer)
