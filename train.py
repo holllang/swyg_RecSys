@@ -17,7 +17,7 @@ def vectorize_sequences(sequences, dimension):
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_path', type=str, default='data/example.json')
+    parser.add_argument('--data_path', type=str, default='data/new_data.json')
     parser.add_argument('--epoch', type=int, default=27)
     parser.add_argument('--batch_size', type=int, default=5)
 
@@ -26,7 +26,7 @@ if __name__=='__main__':
     # 데이터 전처리
     dl = DataLoader(args.data_path)
     # position_score = [101,101,101,101]
-    position_score = [20,20,20,20]
+    position_score = [2,2,2,2,20,20,20,20]
     shape_X = sum(position_score)
     dl.setBias(position_score)
     
