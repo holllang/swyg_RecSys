@@ -1,52 +1,46 @@
 # swyg_RecSys
 
-* [주피터 노트북](https://github.com/swyg-goorm/swyg_RecSys/blob/main/SWYG_RecSys.ipynb) 보러가기
-
 > 유저의 답변을 기반으로 유저에게 맞는 취미를 추천해주는 다중 분류 기반 추천 시스템
 
 > 활용 분야: MBTI 같은 특정 유형 테스트
 
 ## 데이터셋 구성
 
-> 1. 앞으로 만들어질 취미 별 키워드를 기반으로 크롤링 진행</br>
-> 2. 감성 평가 모델을 사용한 취미 별 키워드 점수화</br>
-> 3. EDA 결과를 활용하여 문항과 답변에 맞는 데이터셋 구축</br>
+1. 취미별 크롤링 진행(블로그 글 약 14000개)
+2. 전처리 후 문장 총 143590개 확보
+3. 각 문장과 각 키워드 간의 코사인 유사도 계산
 
 ## 데이터 전처리
 
-> Accumulative bias를 활용한 위치 정보 임베딩</br>
-> Vectorize 후에도 "몇번 문항에 몇번 답변을 골랐다" 라는 정보가 남음</br>
+1. Accumulative bias를 활용한 위치 정보 임베딩
+2. Vectorize 후에도 "각 범주의 점수는 { }점이다" 라는 정보가 남음
 
 
 ### example
 
 ```Python
-num_per_question = [2,3,4,3,2,3,3,2,3,2,3,2,2,2,2,2]
+score_bias = [20, 20, 20, 20]
 ```
 
-```i+1``` 번째 문항의 답변 개수는 총 ```num_per_question[i]``` 개이다.
 
 ```Python
-answer = [1,2,4,1,2,3,3,2,1,2,3,1,1,2,3,2]
+score = [11, 13, 19, 10]
 ```
 
-유저는 ```i+1``` 번째 문항에  ```answer[i]``` 번째 답변을 골랐다.
+유저의 ```i+1``` 번째 범주 점수는  ```score[i]``` 점이다.
 
 ```Python
-question_bias = []
-for idx, num in enumerate(num_per_question):
-  if idx==0: question_bias.append(0)
+score_with_bias = []
+for idx, num in enumerate(score):
+  if idx==0: score_with_bias.append(0)
   else:
-    question_bias.append(sum(num_per_question[:idx]))
+    score_with_bias.append(sum(score_bias[:idx]))
 ```
 
-위 코드를 통해 bias를 구하면 
+위 코드를 통해 bias와 결합된 점수를 구하면 
 
-```question_bias = [0,2,5,9,12,14,17,20,22,25,27,30,32,34,36,38]```
-
-answer와 question_bias를 같은 인덱스끼리 더하고 1을 빼면(0~39 인덱싱),
-
-```answer_with_bias = [0,3,8,9,13,16,19,21,22,26,29,30,32,35,38,39]```
+```score_with_bias = [11, 23, 39, 30]```
+가 된다.
 
 ```Python
 def vectorize_sequences(sequences, dimension=40):
@@ -57,8 +51,8 @@ def vectorize_sequences(sequences, dimension=40):
     return results
 ```
 
-마지막으로, ```vectorize_squences(answer_with_bias)```를 사용하여 데이터를 벡터화하면, </br>
-리스트의 각 값에 해당하는 인덱스에만 1 값이 할당되고, 나머지는 0인 길이 40의 벡터가 만들어진다.
+마지막으로, ```vectorize_squences(score_with_bias)```를 사용하여 데이터를 벡터화하면, </br>
+리스트의 각 값에 해당하는 인덱스에만 1 값이 할당되고, 나머지는 0인 길이 80의 벡터가 만들어진다.
 
 
 또한 training label은, label 간의 연속성이 없기 때문에 ```one hot encoding```을 통해 학습과 추론에 용이하도록 한다.
