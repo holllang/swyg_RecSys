@@ -10,11 +10,11 @@ IM = InferModule(model)
 if __name__=='__main__':
 
     # 사용자의 문항별 답변 항목을 추론 input으로
-    result = IM.start_inferring([0, 1, 1, 1])
-    print(result)
+    inferringResponse = IM.start_inferring([1, 2, 2, 1, 2, 1, 1, 1, 2, 2, 1, 1])
+    print(inferringResponse)
+    
+
 
 
 # 질문들의 답변을 기반으로 각 mbti 범주별 퍼센테이지를 계산
-# 각 범주별 퍼센테이지가 [30, 60, 100, 30] 으로 결과가 나왔다면
-# 0~3 범위로 정규화 시킨다 -> [1, 2, 3, 1]
-# 이렇게 정규화시킨 값이 모델의 입력값이 됨
+# 범주별 퍼센테이지를 0~3 범위로 정규화 시킨 후 모델에 input으로 줌
