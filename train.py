@@ -4,7 +4,7 @@ from keras import models
 from keras import layers
 from dataloader import DataLoader
 import argparse
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 
 def vectorize_sequences(sequences, dimension):
@@ -55,17 +55,17 @@ if __name__=='__main__':
                     )
     # Loss 시각화
 
-    # loss = history.history['loss']
+    loss = history.history['loss']
 
-    # epochs = range(1, len(loss) + 1)
+    epochs = range(1, len(loss) + 1)
 
-    # plt.plot(epochs, loss, 'bo', label='Training loss')
-    # plt.title('Training and validation loss')
-    # plt.xlabel('Epochs')
-    # plt.ylabel('Loss')
-    # plt.legend()
+    plt.plot(epochs, loss, 'bo', label='Training loss')
+    plt.title('Training and validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
 
-    # plt.show()
+    plt.show()
 
     # 모델 저장
     model.save('./model_saved')
