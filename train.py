@@ -68,4 +68,4 @@ if __name__=='__main__':
     plt.show()
 
     # 모델 저장
-    model.save('./model_saved')
+    model.save('./model_saved.h5')

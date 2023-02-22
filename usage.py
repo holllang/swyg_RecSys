@@ -4,7 +4,7 @@ import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-model = models.load_model('./model_saved')
+model = models.load_model('./model_saved.h5')
 IM = InferModule(model)
 
 if __name__=='__main__':
