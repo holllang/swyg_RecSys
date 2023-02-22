@@ -17,7 +17,7 @@ def vectorize_sequences(sequences, dimension):
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_path', type=str, default='data/new_data3.json')
+    parser.add_argument('--data_path', type=str, default='data/dataset.json')
     parser.add_argument('--epoch', type=int, default=100)
     parser.add_argument('--batch_size', type=int, default=5)
 
