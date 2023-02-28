@@ -4,96 +4,122 @@
 
 > 활용 분야: MBTI 같은 특정 유형 테스트
 
-## 데이터셋 구성
+## 🛠 사용기술 및 라이브러리
 
-1. 취미별 크롤링 진행(블로그 글 약 14000개)
-2. 전처리 후 문장 총 143590개 확보
-3. 각 문장과 각 키워드 간의 코사인 유사도 계산
+- Tensorflow, Keras
+- Python
 
-## 데이터 전처리
+## 🗄 데이터셋
 
-1. Accumulative bias를 활용한 위치 정보 임베딩
-2. Vectorize 후에도 "각 범주의 점수는 { }점이다" 라는 정보가 남음
+- 취미 32가지를 선정한 후, 각 취미에 따른 검색결과를 크롤링하였다.
+- 데이터를 다루기 쉽도록 크롤링한 문장들은 json형식으로 각 취미별로 정리하였다.
+- 사용자의 유형은 mbti를 기반으로 추론하였으며, 이에 따라 크롤링한 문장들을 mbti와 관련한 `키워드`들로 분류하기로 하였다.
+- 각 취미가 어떤 mbti와 연관성이 있는지 파악하기 위해 키워드를 선정하였고, 각 문장들과 키워드 간의 `유사도`를 판단하였다.
+    - 키워드
+        
+        ```python
+        keywords = {
+                    'E': ["바깥 외향 활발"],
+                    'I': ["실내 조용 혼자"],
+                    'N': ["생각 상상 "],
+                    'S': ["기분 느낌"],
+                    'F': ["감성 공감 감정"],
+                    'T': ["이성 이해"],
+                    'J': ["계획 오래"],
+                    'P': ["즉흥 잠깐"]
+                    }
+        ```
+        
+    - 유사도 판단(tf-idf, cosine 유사도)
+        
+        ```python
+        def get_score(sentences, hobby, category):
+            sentences = data_pre[hobby]
+            s_len = len(sentences)
+            compare = keywords[category]
+            sentences = compare + sentences
+            tfidf_vectorizer = TfidfVectorizer()
+            tfidf_matrix = tfidf_vectorizer.fit_transform(sentences)
+            val = cosine_similarity(tfidf_matrix[0:1],tfidf_matrix[1:]).tolist()[0]
+            val.sort(reverse=True)
+            total = s_len - val.count(0.0)
+            try:
+                return sum(val)/total
+            except:
+                return 0
+        ```
+        
+- mbti는 4개의 범주(E/I, N/S, F/T, J/P)로 이루어져있기 때문에, 각 범주별로 유사도를 비교하였고, `[E, N, F, J]`를 기준으로 그 유사도를 비교하여 데이터셋을 구성하였다.
+    - 데이터셋
+        
+        ```python
+        {
+            "테니스": [0, 1, 0, 1],
+            "연극 보러가기": [0, 1, 1, 1],
+            "LP판 수정하기": [0, 1, 1, 1],
+            "다이어리 꾸미기": [0, 1, 1, 2],
+            "등산": [0, 1, 3, 1],
+            "무에타이": [0, 1, 3, 1],
+            "K-POP 댄스": [0, 1, 3, 2],
+            "스노우보드": [0, 2, 0, 1],
+            "디제잉": [0, 2, 0, 2],
+            "카톡 이모티콘 만들기": [0, 2, 1, 1],
+            "레고 조립": [0, 2, 2, 2],
+            "가죽공예": [0, 2, 3, 3],
+            "요가": [1, 1, 1, 1],
+            "헬스": [1, 1, 2, 1],
+            "목공예": [1, 1, 3, 1],
+            "둘레길 걷기": [1, 1, 3, 2],
+            "캠핑": [1, 2, 1, 1],
+            "서핑": [2, 1, 0, 1],
+            "배드민턴": [2, 1, 1, 1],
+            "유튜버 시작하기": [2, 1, 1, 1],
+            "풍경사진 찍기": [2, 1, 1, 1],
+            "전시회 보러가기": [2, 1, 1, 1],
+            "블로그 쓰기": [2, 1, 1, 2],
+            "스키": [2, 1, 2, 1],
+            "클라이밍": [2, 1, 3, 1],
+            "베이킹": [2, 1, 3, 1],
+            "하늘사진 찍기": [2, 1, 3, 2],
+            "노래 녹음하기": [2, 1, 3, 2],
+            "수영": [2, 2, 1, 1],
+            "홈카페하기": [2, 2, 3, 1],
+            "과일청 담그기": [2, 2, 3, 1],
+            "수상스키": [2, 2, 3, 2],
+            "도예": [2, 2, 3, 2]
+        }
 
+        ```
+        
 
-### example
+## 📈 학습
 
-```Python
-score_bias = [20, 20, 20, 20]
-```
-
-
-```Python
-score = [11, 13, 19, 10]
-```
-
-유저의 ```i+1``` 번째 범주 점수는  ```score[i]``` 점이다.
-
-```Python
-score_with_bias = []
-for idx, num in enumerate(score):
-  if idx==0: score_with_bias.append(0)
-  else:
-    score_with_bias.append(sum(score_bias[:idx]))
-```
-
-위 코드를 통해 bias와 결합된 점수를 구하면 
-
-```score_with_bias = [11, 23, 39, 30]```
-가 된다.
-
-```Python
-def vectorize_sequences(sequences, dimension=40):
-    results = np.zeros((len(sequences), dimension))
-    for i, sequence in enumerate(sequences):
-        sequence = list(sequence)
-        results[i, sequence] = 1.
-    return results
-```
-
-마지막으로, ```vectorize_squences(score_with_bias)```를 사용하여 데이터를 벡터화하면, </br>
-리스트의 각 값에 해당하는 인덱스에만 1 값이 할당되고, 나머지는 0인 길이 80의 벡터가 만들어진다.
-
-
-또한 training label은, label 간의 연속성이 없기 때문에 ```one hot encoding```을 통해 학습과 추론에 용이하도록 한다.
-
-
-## 학습
+- keras의 `다중 분류 모델`을 파이프라인으로 사용하였다.
+- 모델 내에서는 input이 `벡터 시퀀스`화 된 후, output을 도출한다.
+- input의 범위를 bias로 설정하여 추론을 진행하기 때문에 `positional information`이 벡터 시퀀스에 남는다.
 
 ```Bash
 python3 train.py --data_path {DATA_PATH} --epoch {EPOCH} --batch_size {BATCH_SIZE}
 ```
 
+- 예시
 
-```Python
-model = models.Sequential()
-model.add(layers.Dense(32, activation='relu', input_shape=(40,)))
-model.add(layers.Dense(16, activation='relu'))
-model.add(layers.Dense(5, activation='softmax'))
+    input : `[2, 1, 0, 3]`
 
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
-```
+    bias : `[4, 4, 4, 4]`
 
-모델은 두 개의 은닉층을 가진 딥러닝 모델을 사용하였고, 병목을 예방하기 위해 서서히 차원을 줄여 나가서 분류 클래스만큼 표현하도록 하였다.</br>
-optimizer는 국룰 ```adam```을 사용하였다.
+    ⇒ input with bias : `[2, 5, 8, 15]`
+        
+- Hyperparemeters
+    - epoch : 100
+    - batch size : 5
+- 데이터셋의 라벨은, 취미간의 연속성이 없기 때문에 `one hot vector`를 사용하여 labeling을 진행하였다.
 
-> epoch:20, batch_size=512
+![Figure_1](https://user-images.githubusercontent.com/86578246/221891920-e45e58c9-9bee-45c1-99ab-a0098badffd8.png)
 
-> 워낙 데이터가 적어서 배치 사이즈가 저리 클 필욘 없었지만 추후 데이터 추가를 염두에 두고 512로 설정하였다.
 
-![image](https://user-images.githubusercontent.com/86578246/213868694-7652cdb7-42e7-40d0-b89c-7a0322a2e08c.png)
 
-역시 학습도 매우 빠르게 진행 되고, 클래스가 적다보니 학습이 안정적으로 진행이 되는걸 확인할 수 있었다.
-
-## 추론
-
-![image](https://user-images.githubusercontent.com/86578246/213868780-438e80ff-bf1c-44d4-9e7f-de23faba4369.png)
-
-훈련 데이터 값을 조금씩만 바꾸고 예측을 해봤는데, 원하던 결과는 맨 첫 컬럼이 1,2,3,4,5로 나오는 것이었지만 5,2,3,4,5 로 나온 것을 보니 정확도가 나쁘지 않은 정도임을 알 수 있었다.
-
-### Usage
+## 🔨 추론
 
 ```Python
 from infer import InferModule
@@ -117,16 +143,38 @@ if __name__=='__main__':
 매 추론 요청마다 모델을 로드하는 것이 아닌,</br>
 모델을 로드해두고 추론을 하는 것이기 때문에 실행 시간이 짧다 :)
 
-## 진행 상황
+### 추론 테스트 결과
 
-### 1/21 데이터셋 구축 시에 사용할 KoBERT 감성 분석 모델 학습 완료
-### 1/22 .py 리팩토링 및 모듈화 완료
-### _1/24 base_info.json을 이용한 추가 모듈화 작업 완료_
+1st test
 
-## 추후 추가 내용
-- ~~.py 파일로 바꿔서 업로드~~ 1/22
-- 키워드 크롤링 파이프라인 구축
-- 데이터셋 구축 및 유효성 확보/검증
-- 모델 평가 및 검증(k-fold cross validation)
-- 모델 경량화(Pruning, layer 축소)
+input : `[2, 1, 1, 1]` ⇒ ESTP
+
+output : `['풍경사진찍기', '전시회구경', '유튜버되기']`
+
+2nd test
+
+input : `[1, 2, 3, 1]` ⇒ INFP
+
+output : `['목공예', '카톡이모티콘만들기', '헬스']`
+
+3rd test
+
+input : `[0, 1, 1, 1]` ⇒ ISTP
+
+output : `['연극보기', '바이닐수집', '카톡이모티콘만들기']`
+
+## 📌 평가
+
+- 데이터셋은 `점수를 기준으로 정렬`되어있다.
+- 만약 선택지와 유사한 취미들을 추천해준다면, 데이터셋 내에서 취미들의 `인덱스가 인접`해있을 것이라 가정하였다.
+- 추론으로 나온 취미들로 `(최대 인덱스-최소 인덱스)`를 계산하여 `인접도`를 확인한다.
+- 인접도의 범위는 2~31인데, 2점을 100점으로, 31점을 0점으로 정규화하여 확인한다.
+- 모든 답변의 경우의 수 `4096`개를 사용하여 답변 추론을 진행한다.
+- 점수화 결과
+
+![output](https://user-images.githubusercontent.com/86578246/221891958-7df94414-0ca8-4d93-a341-8ed49511e808.png)
+
+max: 100.0
+min: 20.689655172413794
+avg: 68.34506330819025
 
