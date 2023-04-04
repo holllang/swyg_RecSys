@@ -4,3 +4,4 @@
 test.py
 data/new_dataset.json
 data/data_result.json
+*.ipynb
