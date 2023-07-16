@@ -4,6 +4,11 @@
 
 > 활용 분야: MBTI 같은 특정 유형 테스트
 
+
+## 🎯 추천 로직 모식도
+<img width="281" alt="홀랑 모델 로직" src="https://github.com/holllang/swyg_RecSys/assets/86578246/6a3226bd-165a-4666-9451-ebf7ff98d30d">
+
+
 ## 🛠 사용기술 및 라이브러리
 
 - Tensorflow, Keras
